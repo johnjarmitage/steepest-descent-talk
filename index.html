@@ -43,7 +43,7 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>
+				<section data-background="images/ngari.jpg">
 					<h3>The steepest slope of descent is wrong!</h3>
 					<p>John Armitage</p>
 				</section>
@@ -51,11 +51,142 @@
                 <!-- model resolution matters -->
                 
                 <section>
-                    <section data-state="flexure-is-visible">
+                    <section>
+                        <h3> Numerical resolution </h3>
+                        <p> When itteratively solving a PDE we need to pay attention to the temporal and spatial discretisation. </p>
+                        <p> For example when modelling plate flexure we need to have a sufficiently high resolution to get an accurate solution. </p>
+                    </section>
+                    <section data-state="flexure-is-visible" data-background="white">
                         <div id="flexure"></div>
+                    </section>
+                    <section>
+                        <h3> Numerical resolution </h3>
+                        <p> When itteratively solving a PDE we need to pay attention to the temporal and spatial discretisation. </p>
+                        <p> What about for landsacpe evolution? </p>
                     </section>
                 </section>
         
+                <!-- a transport limited model -->
+                
+                <section>
+                    <section data-background="images/ngari.jpg">
+                        <h3> A transport limited model </h3>
+                    </section>
+                    <section data-background="white">
+                        <div style="display:table;">
+                            <div style="display:table-cell; float:left; vertical-align: middle;">
+                                <img width="500" src="figures/simple_model.svg" style="background:none; border:none; box-shadow:none;">
+                            </div>
+                            <div style="display:table-cell; float:right; vertical-align: middle;">
+                                The rate of change in bedrock thickness is, <br>
+                                $$ \partial_{t}\eta = U - E, $$
+                                and the rate of change in sediment thickness is, <br>
+                                $$ \partial_{t}h = E - \partial_{x}q_{s}.$$
+                                The rate of change in elevation is then, <br>
+                                $$ \partial_{t}z = \partial_{t}\eta + \partial_{t}h. $$
+                            </div>
+                        </div>
+                    </section>
+                    <section data-background="white">
+                        <div style="display:table;">
+                            <div style="display:table-cell; float:left; vertical-align: middle;">
+                                <img width="500" src="figures/simple_model.svg" style="background:none; border:none; box-shadow:none;">
+                            </div>
+                            <div style="display:table-cell; float:right; vertical-align: middle;">
+                                Assume there is always transportable <br> sediment: <br>
+                                $$ \partial_{t}z = \partial_{t}\eta + \partial_{t}h $$
+                                Carry through the sum: <br>
+                                $$ \partial_{t}z = U - \partial_{x}q_{s} $$
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3> Smith and Bretherton (1972) model </h3>
+                        <ul>
+                            <li> In the absence of runoff $q_{s} = -\kappa\partial_{x}z$.</li>
+                            <li> In the presence of flowing water $q_{s} = -cq_{w}^{\delta}\left(\partial_{x}z\right)^{\gamma}$.</li>
+                            <li> $\delta > 1$ to concentrate flow (Smith and Bretherton, 1972).</li>
+                            <li> $\gamma \geq 1$ and is dependent the sediment transport (Paola et al., 1992).</li>
+                        </ul>
+                        <br><br>
+                        $$ \partial_{t}z = U + \partial_{x}\left(\kappa\partial_{x}z + cq_{w}^{\delta}\left(\partial_{x}z\right)^{\gamma}\right) $$
+                    </section>
+                </section>
+                
+                <!-- a detachment limited model -->
+                
+                <section>
+                    <section data-background="images/kizilsu.jpg">
+                        <h3> A detachment limited model </h3>
+                    </section>
+                    <section data-background="white">
+                        <div style="display:table;">
+                            <div style="display:table-cell; float:left; vertical-align: middle;">
+                                <img width="500" src="figures/simple_model.svg" style="background:none; border:none; box-shadow:none;">
+                            </div>
+                            <div style="display:table-cell; float:right; vertical-align: middle;">
+                                The rate of change in bedrock thickness is, <br>
+                                $$ \partial_{t}\eta = U - E, $$
+                                and the rate of change in sediment thickness is, <br>
+                                $$ \partial_{t}h = E - \partial_{x}q_{s}.$$
+                                The rate of change in elevation is then, <br>
+                                $$ \partial_{t}z = \partial_{t}\eta + \partial_{t}h. $$
+                            </div>
+                        </div>
+                    </section>
+                    <section data-background="white">
+                        <div style="display:table;">
+                            <div style="display:table-cell; float:left; vertical-align: middle;">
+                                <img width="500" src="figures/simple_model.svg" style="background:none; border:none; box-shadow:none;">
+                            </div>
+                            <div style="display:table-cell; float:right; vertical-align: middle;">
+                                Assume the rate of change in sediment is zero <br>
+                                (there is no sediment!): <br>
+                                $$ \partial_{t}z = U - E $$
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3> Howard and Kerby (1983) model </h3>
+                        <ul>
+                            <li> Erosion is a function of the power of the flow to detach rock.</li>
+                            <li> $E = -k_{b}\rho_{w}gq_{w}^{m}\left(\partial_{x}z\right)^{n}$.</li>
+                            <li> $m \sim 0.5$ (Lacey, 1930; Leopold and Maddock, 1953).</li>
+                            <li> $n \geq 1$ (less than one is just silly)</li>
+                        </ul>
+                        <br><br>
+                        $$ \partial_{t}z = U + kq_{w}^{m}\left(\partial_{x}z\right)^{n} $$
+                    </section>
+                </section>
+                
+                <!-- steady state landscapes -->
+                
+                <section>
+                    <section>
+                        <h3> Routing water down the steepest slope: What does the steady state landsacpe look like?</h3>
+                    </section>
+                    <section>
+                        <p> Take the linear form of the two models: $\gamma = 1$ and $n = 1$ </p>
+                        <br><br>
+                        $$ \partial_{t}z = U + \partial_{x}\left(\kappa\partial_{x}z + cq_{w}^{\delta}\partial_{x}z\right) $$
+                        <br><br>
+                        $$ \partial_{t}z = U + kq_{w}^{m}\partial_{x}z $$
+                    </section>
+                    <section>
+                        <p> Smith and Bretherton (1972) model </p>
+                        <div style="display:inline;">
+                            <img src="figures/smith-bretherton-steady.png" style="background:none; border:none; box-shadow:none;">
+                        </div>
+                        <small> Solved using the numerical model of Simpson and Schlunneger (2003) </small>
+                    </section>
+                    <section>
+                        <p> Howard and Kerby (1984) model </p>
+                        <div style="display:inline;">
+                            <img src="figures/howard-kerby-steady.png" style="background:none; border:none; box-shadow:none;">
+                        </div>
+                        <small> Solved using Fastcape </small>
+                    </section>
+                </section>
 			</div>
 		</div>
 
