@@ -1,0 +1,1179 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>The importance of ice sheet growth and retreat on magmatism and mantle CO<sup>2</sup> flux</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'reveal.js/text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );           
+		</script>
+        
+        <!-- Plotly -->
+        <script src="plotly.js/plotly-latest.min.js">
+        </script>
+        
+        <!--- math.js -->
+        <script src="math.js/math.min.js">
+        </script>
+        
+        <!--- iframe style -->
+        <style>
+            .p_iframe iframe {
+                width:100%;
+                height:576px;
+            }
+        </style>
+	</head>
+    
+    <!-- presentation starts here -->
+    
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h3>The steepest slope of descent is wrong!</h3>
+					<p>John Armitage</p>
+				</section>
+                
+                <!-- model resolution matters -->
+                
+                <section>
+                    <section data-state="flexure-is-visible">
+                        <div id="flexure"></div>
+                    </section>
+                </section>
+        
+			</div>
+		</div>
+
+		<script src="reveal.js/lib/js/head.min.js"></script>
+		<script src="reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+                
+                width: "100%",
+                height: "100%",
+                
+                // to stop plots being half way down the slide
+                // center: false, 
+                
+                math: {
+                    mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                    //mathjax: 'MathJax/MathJax.js',
+                    config: 'TeX-AMS_HTML-full' // See http://docs.mathjax.org/en/latest/config-files.html
+                },
+				dependencies: [
+					{ src: 'reveal.js/plugin/markdown/marked.js' },
+					{ src: 'reveal.js/plugin/markdown/markdown.js' },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'reveal.js/plugin/math/math.js', async: true }
+				]
+			});
+        </script>
+        
+        <!-- plotly plots -->
+        
+        <!-- plot of NGRIP and sea level  -->
+        
+        <script>
+            Reveal.addEventListener('flexure-is-visible', function() {
+                Plotly.d3.csv("data/w10.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/w100.csv", function(error2, data2) { 
+                        Plotly.d3.csv("data/w1000.csv", function(error3, data3) {
+                            var x1 = [], y1 = [], x2 = [], y2 = [], x3 = [], y3 = [];
+
+                            for (var i=0; i<data1.length; i++) {
+                                row = data1[i];
+                                x1.push( row['Distance'] );
+                                y1.push( row['Displacement'] );
+                            }
+                            for (var i=0; i<data2.length; i++) {
+                                row = data2[i];
+                                x2.push( row['Distance'] );
+                                y2.push( row['Displacement'] );
+                            }
+                            for (var i=0; i<data3.length; i++) {
+                                row = data3[i];
+                                x3.push( row['Distance'] );
+                                y3.push( row['Displacement'] );
+                            }
+                            
+                            x1 = math.multiply(0.001,x1)
+                            x2 = math.multiply(0.001,x2)
+                            x3 = math.multiply(0.001,x3)
+                                                    
+                            console.log('X1',x1, 'Y1',y1, 'X2',x2, 'Y2', y2);
+                            makePlotly(x1, y1, x2, y2, x3, y3);
+                        });
+                    });
+                });
+
+                function makePlotly(x1, y1, x2, y2, x3, y3){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y1,
+                        mode: 'lines+markers',
+                        type: 'scatter',
+                        marker: {color: 'rgb(27,158,119)'},
+                        name: '10 nodes'
+                    };
+                    var trace2 = {
+                        x: x2,
+                        y: y2,
+                        mode: 'lines+markers',
+                        type: 'scatter',
+                        marker: {color: 'rgb(217,95,2)'},
+                        name: '100 nodes'
+                    };
+                    var trace3 = {
+                        x: x3,
+                        y: y3,
+                        mode: 'lines+markers',
+                        type: 'scatter',
+                        marker: {color: 'rgb(117,112,179)'},
+                        name: '1000 nodes'
+                    };
+                    var data = [trace3, trace2, trace1];
+                    var layout = {
+                        showlegend: true,
+                        title: {text:'Simple plate flexure'},
+                        xaxis: {title: {text: 'Distance (km)'}},
+                        yaxis: {title: {text: 'Displacement (m)'}}
+                    };
+
+                    Plotly.newPlot('flexure', data, layout).then(Reveal.layout);
+                };
+            });
+        </script>
+                
+        <!-- plot of ice sheet thickness  -->
+        
+        <script>
+            Reveal.addEventListener('ice-thickness-is-visible', function() {
+                Plotly.d3.csv("data/NGRIP.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/iceland.csv", function(error2, data2) {
+                
+                        var x1 = [], y11 = [], y12 = [], x2 = [], y21 = [];
+
+                        for (var i=0; i<data1.length; i++) {
+                            row = data1[i];
+                            x2.push( row['time'] );
+                            y21.push( row['deltaO'] );
+                        }   
+
+                        for (var i=0; i<data2.length; i++) {
+                            row = data2[i];
+                            x1.push( row['time'] );
+                            y11.push( row['ice5g'] );
+                            y12.push( row['pico'] );
+                        }
+                        
+                        x2 = math.multiply(1000,x2)
+                        
+                        console.log('X',x1, 'Y1',y11, 'Y2', y12);
+                        makePlotly(x1, y11, y12, x2, y21);
+                    });
+                });
+                
+                function makePlotly(x1, y11, y12, x2, y21){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y11,
+                        mode: 'lines',
+                        name: 'ICE5G'
+                    };
+                    var trace2 = {
+                        x: x1,
+                        y: y12,
+                        mode: 'lines',
+                        name: 'PC2'
+                    };
+                    var trace3 = {
+                        x: x2,
+                        y: y21,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'NGRIP'
+                    };
+                    var data = [trace1, trace2, trace3];
+                    var layout = {
+                        title: {text:'Iceland Ice Sheet for last 120 ka'},
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        xaxis1: {range: [0, 120000]},
+                        yaxis1: {title: {text: 'Thickness (km)'}},
+                        xaxis2: {title: {text: 'Time (yrs)'}, range: [0, 120000]},
+                        yaxis2: {title: {text: 'NGRIP'}}
+                    };
+                    
+                    Plotly.newPlot('ice-thickness', data, layout).then(Reveal.layout);
+                };
+            });
+        </script>  
+        
+        <!-- 3D plot of scatter for ice history -->
+        
+        <script>
+            Reveal.addEventListener('ice-corr-is-visible', function() {
+                Plotly.d3.csv("data/ice-scatter.csv", function(error1, data1) {
+                    var x = [], y = [], z = [];
+                    
+                    for (var i=0; i<data1.length; i++) {
+                            row = data1[i];
+                            x.push( row['NGRIP'] );
+                            y.push( row['RSL'] );
+                            z.push( row['Ice History'])
+                        }
+                        console.log('X',x, 'Y',y, 'Z', z);
+                        makePlotly(x,y,z);
+                });
+                
+                function makePlotly(x,y,z) {
+                   var trace1 = {
+                        x: x, y: y, z: z,
+                        mode: 'markers',
+                        marker: {
+                            size: 5,
+                            line: {
+                            color: 'rgba(217, 217, 217, 0.14)',
+                            width: 0.2},
+                            opacity: 1},
+                        type: 'scatter3d'
+                    };
+                    var data = [trace1];
+                    var layout = {
+                        margin: {l: 0, r: 0, b: 0, t: 0},
+                        scene: {
+                            xaxis: {title: 'NGRIP delta O'},
+                            yaxis: {title:'R.S.L. (m)'},
+                            zaxis: {title: 'Ice thickness (m)'}
+                        }
+                    };
+                    
+                    Plotly.newPlot('ice-corr', data, layout).then(Reveal.layout);
+                };
+            });
+        </script>
+ 
+        <!-- plot of Nb compostion and ice sheet history -->
+        
+        <script>
+            Reveal.addEventListener('Nb-raw-is-visible', function() {
+                Plotly.d3.csv("data/Nb_raw.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/Ice_raw.csv", function(error2, data2) { 
+                        var x1 = [], y1 = [], x2 = [], y2 = [];
+
+                        for (var i=0; i<data1.length; i++) {
+                            row = data1[i];
+                            x1.push( row['age'] );
+                            y1.push( row['Nb'] );
+                        }
+                        for (var i=0; i<data2.length; i++) {
+                            row = data2[i];
+                            x2.push( row['age'] );
+                            y2.push( row['Ice'] );
+                        }
+                        console.log('X1',x1, 'Y1',y1, 'X2',x2, 'Y2', y2);
+                        makePlotly(x1, y1, x2, y2);
+                    });
+                });
+            
+                function makePlotly(x1, y1, x2, y2){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y1,
+                        mode: 'markers',
+                        type: 'scatter',
+                        name: 'Nb composition'
+                    };
+                    var trace2 = {
+                        x: x2,
+                        y: y2,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'Ice Sheet'
+                    };
+                    var data = [trace1, trace2];
+                    var layout = {
+                        showlegend: false,
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Nb composition from Gee et al. (1998) and Eason et al. (2015)'},
+                        xaxis1: {range: [0, 40]},
+                        yaxis1: {title: {text: 'Nb (ppm)'}},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 40]},
+                        yaxis2: {title: {text: 'Ice Thickness (km)'}}
+                    };
+
+                    Plotly.newPlot('Nb-raw', data, layout).then(Reveal.layout);
+                };
+            });
+        </script>
+        
+        <!-- plot of Nb binned compostion and ice sheet history -->
+        
+        <script>
+            Reveal.addEventListener('Nb-binned-is-visible', function() {
+                Plotly.d3.csv("data/Nb-binned.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/Ice_raw.csv", function(error2, data2) { 
+                        var x1 = [], y11 = [], y12 = [], x2 = [], y2 = [];
+
+                        for (var i=0; i<data1.length; i++) {
+                                row = data1[i];
+                                x1.push( row['time'] );
+                                y11.push( row['Nb'] );
+                                y12.push( row['Nbstd'] );
+                            }
+                        for (var i=0; i<data2.length; i++) {
+                            row = data2[i];
+                            x2.push( row['age'] );
+                            y2.push( row['Ice'] );
+                        }
+                        console.log('X1',x1, 'Y1',y11, 'X2',x2, 'Y2', y2);
+                        makePlotly(x1, y11, y12, x2, y2);
+                    });
+                });
+            
+                function makePlotly(x1, y11, y12, x2, y2){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y11,
+                        error_y: {type: 'data',
+                                  array: y12,
+                                  visible: true
+                                 },
+                        type: 'scatter',
+                        mode: 'markers',
+                        name: 'Nb Binned'
+                    }
+                    var trace2 = {
+                        x: x2,
+                        y: y2,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'Ice Sheet'
+                    };
+                    var data = [trace1, trace2];
+                    var layout = {
+                        showlegend: false,
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Nb composition from Gee et al. (1998) and Eason et al. (2015)'},
+                        xaxis1: {range: [0, 40]},
+                        yaxis1: {title: {text: 'Nb (ppm)'}},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 40]},
+                        yaxis2: {title: {text: 'Ice Thickness (km)'}}
+                    };
+
+                    Plotly.newPlot('Nb-binned', data, layout).then(Reveal.layout);
+                };
+            });
+        </script>
+        
+        <!-- plot of correlation between Nb and ice thickness -->
+        
+        <script>
+            Reveal.addEventListener('Nb-corr-is-visible', function() {
+                Plotly.d3.csv("data/Nb_correlation.csv", processData);
+                
+                function processData(allRows) {
+                    console.log(allRows);
+                    var x = [], y11 = [], y12 = [], y13 = [];
+                    var y21 = [], y22 = [], y23 = [];
+                    
+                    for (var i=0; i<allRows.length; i++) {
+                        row = allRows[i];
+                        x.push( row['age'] );
+                        y11.push( row['Nbhat'] );
+                        y12.push( row['Nbmin'] );
+                        y13.push( row['Nbmax'] );
+                        y21.push( row['Icehat'] );
+                        y22.push( row['Icemin'] );
+                        y23.push( row['Icemax'] );
+                    }
+                                        
+                    console.log('X',x);
+                    makePlotly(x, y11, y12, y13, y21, y22, y23);
+                }
+                
+                function makePlotly(x, y11, y12, y13, y21, y22, y23){
+                    var plotDiv = document.getElementById("plot");
+                    var trace11 = {
+                        x: x,
+                        y: y11,
+                        mode: 'lines',
+                        marker: {color: 'rgb(142, 124, 195)'},
+                        name: 'Nb'
+                    };
+                    var trace12 = {
+                        x: x,
+                        y: y12,
+                        mode: 'lines',
+                        line: {dash: 'dashdot'},
+                        marker: {color: 'rgb(142, 124, 195)'},
+                        name: 'Nb min'
+                    };
+                    var trace13 = {
+                        x: x,
+                        y: y13,
+                        mode: 'lines',
+                        line: {dash: 'dashdot'},
+                        marker: {color: 'rgb(142, 124, 195)'},
+                        name: 'Nb max'
+                    };
+                    var trace21 = {
+                        x: x,
+                        y: y21,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        marker: {color: 'rgb(222, 45, 38)'},
+                        name: 'Ice Sheet'
+                    };
+                    var trace22 = {
+                        x: x,
+                        y: y22,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        line: {dash: 'dashdot'},
+                        marker: {color: 'rgb(222, 45, 38)'},
+                        name: 'Ice min'
+                    };
+                    var trace23 = {
+                        x: x,
+                        y: y23,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        line: {dash: 'dashdot'},
+                        marker: {color: 'rgb(222, 45, 38)'},
+                        name: 'Ice max'
+                    };
+                    var data = [trace11, trace12, trace13, trace21, trace22, trace23];
+                    var layout = {
+                        showlegend: false,
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Gaussian smoothing of trends'},
+                        xaxis1: {range: [0, 40]},
+                        yaxis1: {title: {text: 'Nb (ppm)'}},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 40]},
+                        yaxis2: {title: {text: 'Ice Thickness (km)'}}
+                    };
+                
+                    Plotly.newPlot('Nb-corr', data, layout).then(Reveal.layout);
+                };
+            });
+        </script>
+        
+        <!-- plot of correlation between random scatters -->
+        
+        <script>
+            Reveal.addEventListener('random-corr-is-visible', function() {
+                Plotly.d3.csv("data/random_correlation.csv", processData);
+                
+                function processData(allRows) {
+                    console.log(allRows);
+                    var x = [], y11 = [], y12 = [], y13 = [];
+                    var y21 = [], y22 = [], y23 = [];
+                    
+                    for (var i=0; i<allRows.length; i++) {
+                        row = allRows[i];
+                        x.push( row['age'] );
+                        y11.push( row['Nb'] );
+                        y12.push( row['Nbhat'] );
+                        y21.push( row['Ice'] );
+                        y22.push( row['Icehat'] );
+                    }
+                        
+                    console.log('X',x);
+                    makePlotly(x, y11, y12, y21, y22);
+                }
+                
+                function makePlotly(x, y11, y12, y21, y22){
+                    var plotDiv = document.getElementById("plot");
+                    var trace11 = {
+                        x: x,
+                        y: y11,
+                        mode:  'markers',
+                        type: 'scatter',
+                        marker: {color: 'rgb(142, 124, 195)'},
+                        name: 'Nb'
+                    };
+                    var trace12 = {
+                        x: x,
+                        y: y12,
+                        mode: 'lines',
+                        marker: {color: 'rgb(222, 45, 38)'},
+                        name: 'Nb hat'
+                    };
+                    var trace21 = {
+                        x: x,
+                        y: y21,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'markers',
+                        type: 'scatter',
+                        marker: {color: 'rgb(142, 124, 195)'},
+                        name: 'Ice Sheet'
+                    };
+                    var trace22 = {
+                        x: x,
+                        y: y22,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        marker: {color: 'rgb(222, 45, 38)'},
+                        name: 'Ice hat'
+                    };
+                    var data = [trace11, trace12, trace21, trace22];
+                    var layout = {
+                        showlegend: false,
+                        grid: {rows: 1, columns: 2, pattern: 'independent'},
+                        title: {text:'Smoothed random distributions'},
+                        xaxis1: {title: {text: 'Time (kyrs)'}},
+                        yaxis1: {title: {text: 'Nb (ppm)'}},
+                        xaxis2: {title: {text: 'Time (kyrs)'}},
+                        yaxis2: {title: {text: 'Ice Thickness (km)'}}
+                    };
+                
+                    Plotly.newPlot('random-corr', data, layout).then(Reveal.layout);
+                };
+            });
+        </script>
+        
+        <!-- step change in ice thickness, permeability coeff. 10^-7 -->
+        
+        <script>
+            Reveal.addEventListener('modelStep7-is-visible', function() {
+                Plotly.d3.csv("data/modelStep_1e-7.csv", processData);
+                
+                function processData(allRows) {
+                    console.log(allRows);
+                    var x = [], y1 = [], y2 = [];
+                    
+                    for (var i=0; i<allRows.length; i++) {
+                        row = allRows[i];
+                        x.push( row['time'] );
+                        y1.push( row['ice_sheet'] );
+                        y2.push( row['erupt_rate'] );
+                    }
+                        
+                    console.log( 'X',x, 'Y1',y1, 'Y2', y2);
+                    makePlotly( x, y1, y2);
+                }
+                
+                function makePlotly( x, y1, y2){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x,
+                        y: y1,
+                        mode: 'lines',
+                        name: 'Ice Sheet'
+                    };
+                    var trace2 = {
+                        x: x,
+                        y: y2,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'Eruption Rate'
+                    };
+                    var data = [trace1, trace2];
+                    var layout = {
+                        //autosize: false,
+                        //width: 1000,
+                        //height: 500,
+                        showlegend: false,
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Model response to step change'},
+                        xaxis1: {range: [0, 120]},
+                        yaxis1: {title: {text: 'Ice Thickness (km)'}, range: [0, 2.5]},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 120]},
+                        yaxis2: {title: {text: 'Eruption rate (km/Myr)'}}
+                    };
+                
+                        Plotly.newPlot('modelStep7', data, layout).then(Reveal.layout);
+                };
+            });
+            
+        </script>
+            
+        <!-- step change in ice thickness, permeability coeff. 10^-7 -->
+        
+        <script>
+            Reveal.addEventListener('modelStep5-is-visible', function() {
+                Plotly.d3.csv("data/modelStep_1e-5.csv", processData);
+                
+                function processData(allRows) {
+                    console.log(allRows);
+                    var x = [], y1 = [], y2 = [];
+                    
+                    for (var i=0; i<allRows.length; i++) {
+                        row = allRows[i];
+                        x.push( row['time'] );
+                        y1.push( row['ice_sheet'] );
+                        y2.push( row['erupt_rate'] );
+                    }
+                        
+                    console.log( 'X',x, 'Y1',y1, 'Y2', y2);
+                    makePlotly( x, y1, y2);
+                }
+                
+                function makePlotly( x, y1, y2){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x,
+                        y: y1,
+                        mode: 'lines',
+                        name: 'Ice Sheet'
+                    };
+                    var trace2 = {
+                        x: x,
+                        y: y2,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'Eruption Rate'
+                    };
+                    var data = [trace1, trace2];
+                    var layout = {
+                        //autosize: false,
+                        //width: 1000,
+                        //height: 500,
+                        showlegend: false,
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Model response to step change'},
+                        xaxis1: {range: [0, 120]},
+                        yaxis1: {title: {text: 'Ice Thickness (km)'}, range: [0, 2.5]},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 120]},
+                        yaxis2: {title: {text: 'Eruption rate (km/Myr)'}}
+                    };
+                    
+                    Plotly.newPlot('modelStep5', data, layout).then(Reveal.layout);
+                };              
+            });
+        </script>
+        
+        <!-- depth, Vs, and phi -->
+        
+        <script>
+            Reveal.addEventListener('Vs-depth-is-visible', function() {
+                Plotly.d3.csv("data/Vs_1e-5.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/Vs_1e-7.csv", function(error2, data2) {
+                        Plotly.d3.csv("data/Vs_obs.csv", function(error3, data3) {
+                            var x1 = [], y11 = [], y12 = [], y13 = [];
+                            var x2 = [], y21 = [], y22 = [], y23 = [];
+                            var x3 = [], y31 = [], y32 = [];
+
+                            for (var i=0; i<data1.length; i++) {
+                                row = data1[i];
+                                x1.push( row['depth'] );
+                                y11.push( row['Vsana'] );
+                                y12.push( row['Vsphi'] );
+                                y13.push( row['phi'] );
+                            }
+                            for (var i=0; i<data2.length; i++) {
+                                row = data2[i];
+                                x2.push( row['depth'] );
+                                y21.push( row['Vsana'] );
+                                y22.push( row['Vsphi'] );
+                                y23.push( row['phi'] );
+                            }
+                            for (var i=0; i<data3.length; i++) {
+                                row = data3[i];
+                                x3.push( row['depth'] );
+                                y31.push( row['Vmin'] );
+                                y32.push( row['Vmax'] );
+                            }
+                            makePlotly(x1, y11, y12, y13, x2, y21, y22, y23, x3, y31, y32);
+                        });
+                    }); 
+                });
+                    
+                function makePlotly(x1, y11, y12, y13, x2, y21, y22, y23, x3, y31, y32){
+                    var plotDiv = document.getElementById("plot");
+                    var tracephi1 = {
+                        x: y13,
+                        y: x1,
+                        mode: 'lines',
+                        marker: {color: 'rgb(142, 124, 195)'},
+                        name: 'Porosity, k=1e-5'
+                    };
+                    var tracephi2 = {
+                        x: y23,
+                        y: x2,
+                        mode: 'lines',
+                        marker: {color: 'rgb(222, 45, 38)'},
+                        name: 'Porosity, k=1e-5'
+                    };
+                    var traceobsmin1 = {
+                        x: y31,
+                        y: x3,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        marker: {color: 'rgb(200, 200, 200)'},
+                        name: 'Observation min.'
+                    };
+                    var traceobsmax1 = {
+                        x: y32,
+                        y: x3,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        marker: {color: 'rgb(150, 150, 150)'},
+                        name: 'Observation max.'
+                    };
+                    var tracevana1 = {
+                        x: y11,
+                        y: x1,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        marker: {color: 'rgb(142, 124, 195)'},
+                        line: {dash: 'dashdot'},
+                        name: 'Vs, k=1e-5, no melt'
+                    };
+                    var tracevphi1 = {
+                        x: y12,
+                        y: x1,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        marker: {color: 'rgb(142, 124, 195)'},
+                        mode: 'lines',
+                        name: 'Vs, k=1e-5, melt'
+                    };
+                    var traceobsmin2 = {
+                        x: y31,
+                        y: x3,
+                        xaxis: 'x3',
+                        yaxis: 'y3',
+                        mode: 'lines',
+                        marker: {color: 'rgb(200, 200, 200)'},
+                        name: 'Observation min.'
+                    };
+                    var traceobsmax2 = {
+                        x: y32,
+                        y: x3,
+                        xaxis: 'x3',
+                        yaxis: 'y3',
+                        mode: 'lines',
+                        marker: {color: 'rgb(150, 150, 150)'},
+                        name: 'Observation max.'
+                    };
+                    var tracevana2 = {
+                        x: y21,
+                        y: x2,
+                        xaxis: 'x3',
+                        yaxis: 'y3',
+                        mode: 'lines',
+                        marker: {color: 'rgb(222, 45, 38)'},
+                        line: {dash: 'dashdot'},
+                        name: 'Vs, k=1e-7, no melt'
+                    };
+                    var tracevphi2 = {
+                        x: y22,
+                        y: x2,
+                        xaxis: 'x3',
+                        yaxis: 'y3',                 
+                        mode: 'lines',
+                        marker: {color: 'rgb(222, 45, 38)'},
+                        name: 'Vs, k=1e-7, melt'
+                    };
+
+                    var data = [tracephi1, tracephi2, traceobsmin1, traceobsmax1, tracevana1, tracevphi1,
+                                traceobsmin2, traceobsmax2, tracevana2, tracevphi2];
+                    var layout = {
+                        grid: {rows: 1, columns: 3, pattern: 'independent'},
+                        title: {text:'Depth Profiles'},
+                        xaxis1: {title: {text: 'Porosity'}, range: [0, 0.01]},
+                        yaxis1: {title: {text: 'Depth (km)'}, range: [150, 30]},
+                        xaxis2: {title: {text: 'Vs (km/s)'}, range: [3.6, 4.4]},
+                        yaxis2: {title: {text: 'Depth (km)'}, range: [150, 30]},
+                        xaxis3: {title: {text: 'Vs (km/s)'}, range: [3.6, 4.4]},
+                        yaxis3: {title: {text: 'Depth (km)'}, range: [150, 30]}
+                    };
+                    
+                    Plotly.newPlot('Vs-depth', data, layout).then(Reveal.layout);
+                };              
+            });
+        </script>
+        
+        <!-- 120 ka ICE5G eruption rates -->
+        
+        <script>
+            Reveal.addEventListener('120ka-erupt-is-visible', function() {
+                Plotly.d3.csv("data/model_M1.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/model_M1b.csv", function(error2, data2) { 
+                        var x1 = [], y11 = [], y12 = [], x2 = [], y21 = [];
+
+                        for (var i=0; i<data1.length; i++) {
+                            row = data1[i];
+                            x1.push( row['time'] );
+                            y11.push( row['ice_sheet'] );
+                            y12.push( row['erupt_rate'] );
+                        }
+                        for (var i=0; i<data2.length; i++) {
+                            row = data2[i];
+                            x2.push( row['time'] );
+                            y21.push( row['erupt_rate'] );
+                        }
+                        makePlotly(x1, y11, y12, x2, y21);
+                    });
+                }); 
+                
+                function makePlotly(x1, y11, y12, x2, y21){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y11,
+                        mode: 'lines',
+                        name: 'ICE5G'
+                    };
+                    var trace2 = {
+                        x: x1,
+                        y: y12,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: '10 mm/yr'
+                    };
+                    var trace3 = {
+                        x: x2,
+                        y: y21,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: '20 mm/yr'
+                    };
+                    var data = [trace1, trace2, trace3];
+                    var layout = {
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Model response to step change'},
+                        xaxis1: {range: [0, 120]},
+                        yaxis1: {title: {text: 'Ice Thickness (km)'}, range: [0, 2.5]},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 120]},
+                        yaxis2: {title: {text: 'Eruption rate (km/Myr)'}}
+                    };
+                    
+                    Plotly.newPlot('120ka-erupt', data, layout).then(Reveal.layout);
+                };              
+            });
+        </script>
+        
+        <!-- 120 ka ICE5G CO2 flux -->
+        
+        <script>
+            Reveal.addEventListener('120ka-CO2-is-visible', function() {
+                Plotly.d3.csv("data/model_M1.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/model_M1b.csv", function(error2, data2) { 
+                        var x1 = [], y11 = [], y12 = [], x2 = [], y21 = [];
+
+                        for (var i=0; i<data1.length; i++) {
+                            row = data1[i];
+                            x1.push( row['time'] );
+                            y11.push( row['ice_sheet'] );
+                            y12.push( row['CO2_flux'] );
+                        }
+                        for (var i=0; i<data2.length; i++) {
+                            row = data2[i];
+                            x2.push( row['time'] );
+                            y21.push( row['CO2_flux'] );
+                        }
+                        makePlotly(x1, y11, y12, x2, y21);
+                    });
+                }); 
+                
+                function makePlotly(x1, y11, y12, x2, y21){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y11,
+                        mode: 'lines',
+                        name: 'ICE5G'
+                    };
+                    var trace2 = {
+                        x: x1,
+                        y: y12,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: '10 mm/yr'
+                    };
+                    var trace3 = {
+                        x: x2,
+                        y: y21,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: '20 mm/yr'
+                    };
+                    var data = [trace1, trace2, trace3];
+                    var layout = {
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Model response to step change'},
+                        xaxis1: {range: [0, 120]},
+                        yaxis1: {title: {text: 'Ice Thickness (km)'}, range: [0, 2.5]},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 120]},
+                        yaxis2: {title: {text: 'CO2 flux (Mt/yr)'}, range: [0, 40]}
+                    };
+                    
+                    Plotly.newPlot('120ka-CO2', data, layout).then(Reveal.layout);
+                };              
+            });
+        </script>
+        
+        <!-- 40 ka ICE5G and PC2 eruption rates -->
+        
+        <script>
+            Reveal.addEventListener('40ka-erupt-is-visible', function() {
+                Plotly.d3.csv("data/model_M1b.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/model_M2.csv", function(error2, data2) { 
+                        var x1 = [], y11 = [], y12 = [], x2 = [], y21 = [], y22 = [];
+
+                        for (var i=0; i<data1.length; i++) {
+                            row = data1[i];
+                            x1.push( row['time'] );
+                            y11.push( row['ice_sheet'] );
+                            y12.push( row['erupt_rate'] );
+                        }
+                        for (var i=0; i<data2.length; i++) {
+                            row = data2[i];
+                            x2.push( row['time'] );
+                            y21.push( row['ice_sheet'] );
+                            y22.push( row['erupt_rate'] );
+                        }
+                        makePlotly(x1, y11, y12, x2, y21, y22);
+                    });
+                }); 
+                
+                function makePlotly(x1, y11, y12, x2, y21, y22){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y11,
+                        mode: 'lines',
+                        name: 'ICE5G'
+                    };
+                    var trace2 = {
+                        x: x2,
+                        y: y21,
+                        mode: 'lines',
+                        name: 'PC2'
+                    };
+                    var trace3 = {
+                        x: x1,
+                        y: y12,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'eruption ICE5G'
+                    };
+                    var trace4 = {
+                        x: x2,
+                        y: y22,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'eruption PC2'
+                    };
+                    var data = [trace1, trace2, trace3, trace4];
+                    var layout = {
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Model response to step change'},
+                        xaxis1: {range: [0, 40]},
+                        yaxis1: {title: {text: 'Ice Thickness (km)'}, range: [0, 2.5]},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 40]},
+                        yaxis2: {title: {text: 'Eruption rate (km/Myr)'}}
+                    };
+                    
+                    Plotly.newPlot('40ka-erupt', data, layout).then(Reveal.layout);
+                };              
+            });
+        </script>
+        
+        <!-- 40 ka ICE5G and PC2 Nb -->
+        
+        <script>
+            Reveal.addEventListener('40ka-Nb-is-visible', function() {
+                Plotly.d3.csv("data/model_M1b.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/model_M2.csv", function(error2, data2) { 
+                        Plotly.d3.csv("data/Nb-binned.csv", function(error3, data3) {
+                            var x1 = [], y11 = [], y12 = [];
+                            var x2 = [], y21 = [], y22 = [];
+                            var x3 = [], y31 = [], y32 = [];
+
+                            for (var i=0; i<data1.length; i++) {
+                                row = data1[i];
+                                x1.push( row['time'] );
+                                y11.push( row['erupt_rate'] );
+                                y12.push( row['Nb'] );
+                            }
+                            for (var i=0; i<data2.length; i++) {
+                                row = data2[i];
+                                x2.push( row['time'] );
+                                y21.push( row['erupt_rate'] );
+                                y22.push( row['Nb'] );
+                            }
+                            for (var i=0; i<data3.length; i++) {
+                                row = data3[i];
+                                x3.push( row['time'] );
+                                y31.push( row['Nb'] );
+                                y32.push( row['Nbstd'] );
+                            }
+                            makePlotly(x1, y11, y12, x2, y21, y22, x3, y31, y32);
+                        });
+                    });
+                });
+                
+                function makePlotly(x1, y11, y12, x2, y21, y22, x3, y31, y32){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y11,
+                        mode: 'lines',
+                        name: 'eruption ICE5G'
+                    };
+                    var trace2 = {
+                        x: x2,
+                        y: y21,
+                        mode: 'lines',
+                        name: 'eruption PC2'
+                    };
+                    var trace3 = {
+                        x: x1,
+                        y: y12,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'Nb ICE5G'
+                    };
+                    var trace4 = {
+                        x: x2,
+                        y: y22,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'Nb PC2'
+                    };
+                    var trace5 = {
+                        x: x3,
+                        y: y31,
+                        error_y: {type: 'data',
+                                  array: y32,
+                                  visible: true
+                                 },
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        type: 'scatter',
+                        mode: 'markers',
+                        name: 'Nb observation'
+                    };
+                    var data = [trace1, trace2, trace3, trace4, trace5];
+                    var layout = {
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Model response to step change'},
+                        xaxis1: {range: [0, 40]},
+                        yaxis1: {title: {text: 'Eruption rate (km/Myr)'}},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 40]},
+                        yaxis2: {title: {text: 'Nb (ppm)'}}
+                    };
+                    
+                    Plotly.newPlot('Nb-erupt', data, layout).then(Reveal.layout);
+                };              
+            });
+        </script>
+        
+        <!-- 40 ka ICE5G and PC2 CO2 -->
+        
+        <script>
+            Reveal.addEventListener('40ka-CO2-is-visible', function() {
+                Plotly.d3.csv("data/model_M1b.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/model_M2.csv", function(error2, data2) { 
+                        var x1 = [], y11 = [], y12 = [], x2 = [], y21 = [], y22 = [];
+
+                        for (var i=0; i<data1.length; i++) {
+                            row = data1[i];
+                            x1.push( row['time'] );
+                            y11.push( row['erupt_rate'] );
+                            y12.push( row['CO2_flux'] );
+                        }
+                        for (var i=0; i<data2.length; i++) {
+                            row = data2[i];
+                            x2.push( row['time'] );
+                            y21.push( row['erupt_rate'] );
+                            y22.push( row['CO2_flux'] );
+                        }
+                        makePlotly(x1, y11, y12, x2, y21, y22);
+                    });
+                }); 
+                
+                function makePlotly(x1, y11, y12, x2, y21, y22){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y11,
+                        mode: 'lines',
+                        name: 'eruption ICE5G'
+                    };
+                    var trace2 = {
+                        x: x2,
+                        y: y21,
+                        mode: 'lines',
+                        name: 'eruption PC2'
+                    };
+                    var trace3 = {
+                        x: x1,
+                        y: y12,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'CO2 ICE5G'
+                    };
+                    var trace4 = {
+                        x: x2,
+                        y: y22,
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'lines',
+                        name: 'CO2 PC2'
+                    };
+                    var data = [trace1, trace2, trace3, trace4];
+                    var layout = {
+                        grid: {rows: 2, columns: 1, pattern: 'independent'},
+                        title: {text:'Model response to step change'},
+                        xaxis1: {range: [0, 40]},
+                        yaxis1: {title: {text: 'Eruption rate (km/Myr)'}},
+                        xaxis2: {title: {text: 'Time (kyrs)'}, range: [0, 40]},
+                        yaxis2: {title: {text: 'CO2 flux (Mt:yr)'}}
+                    };
+                    
+                    Plotly.newPlot('CO2-erupt', data, layout).then(Reveal.layout);
+                };              
+            });
+        </script>
+	</body>
+</html>
