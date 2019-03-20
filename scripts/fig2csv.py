@@ -31,7 +31,7 @@ def extractFig(filename,fignr=1):
            flx.to_csv(flxname,index=False)
            counter += 1
        
-extractFig('/home/armitage/Documents/articles/2017/transport-or-detachment/figures-working/2d/response_loglog',1)
+extractFig('/home/armitage/Documents/articles/2017/transport-or-detachment/figures-working/2d/transport_sedflux_precipchange',1)
 
 def plotFig(filename,fignr=1):
    d = loadmat(filename,squeeze_me=True, struct_as_record=False)

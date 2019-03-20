@@ -39,6 +39,30 @@
         
         <!-- Class for rotate -->
 		<link rel="stylesheet" href="rotate90.css">
+        
+        <!-- Magnifying glass css -->
+        <style>
+            * {box-sizing: border-box;}
+
+            .img-magnifier-container {
+              position:relative;
+            }
+
+            .img-magnifier-glass {
+              position: absolute;
+              border: 3px solid #000;
+              border-radius: 50%;
+              cursor: none;
+              /*Set the size of the magnifier glass:*/
+              width: 200px;
+              height: 200px;
+            }
+        </style>
+    
+        <!-- Magnify.js -->
+        <script src="magnify-glass.js">
+        </script>
+        
 	</head>
     
     <!-- presentation starts here -->
@@ -278,8 +302,8 @@
                     </section>
                     <section data-background-video="videos/flem2.mp4" data-background-video-loop data-background-video-muted>
                     </section>
-                    <section>
-                        <p> Transport limited </p>
+                    <section data-state="transport-response-is-visible" data-background="white">
+                        <div id="transport-response"></div>
                     </section>
                     <section data-state="streampower-response-is-visible" data-background="white">
                         <div id="streampower-response"></div>
@@ -317,6 +341,12 @@
                         </div>
                         <small> 10 m, 100 m, 1 km? Are rivers at a sub-grid scale? </small>
                     </section>
+                    <section data-state="river_eel-is-visible">
+                        <small> Dietrich, G. (2014): Eel River Critical Zone Observatory July 2014 Lidar Survey. National Center for Airborne Laser Mapping (NCALM), distributed by OpenTopography </small>
+                        <div class="img-magnifier-container">
+                            <img id="river_eel" src="images/viz.be.hs.white.png" width="100%" alt="R.Eel" style="background:none; border:none; box-shadow:none; float:left;">
+                        </div>
+                    </section>
 				    <section>
                         <p> A transport-limited model of landscape evolution </p>
                         <small> Conservation of mass: $$ \partial_{t} z = U - \nabla q_{s} $$ <br> Sediment flux: $$ q_{s} = - \left( \kappa \nabla z + cq_{w}^{n}\nabla z \right) $$</small>
@@ -326,6 +356,10 @@
                         <p> Routing overland flow </p>
                         <small> Two of many options: steepest descent or distributed by gradient.</small>
                         <img width="1000" src='figures_flow/slide05.png' style="background:none; border:none; box-shadow:none;" >
+                    </section>
+                    <section>
+                        <p> Solve the equations using a FEM approach </p>
+                        <img width="80%" src='images/flem-screenshot.png' style="background:none; border:none; box-shadow:none;" >
                     </section>
                 </section>
                 <section>
@@ -381,8 +415,13 @@
                         <iframe frameborder="0" seamless='seamless' scrolling=no src="map-bergantes.html"></iframe>
                         </div>
                     </section>
-                    <section>
-                        <img width="100%" src='figures_flow/slide11.png' style="background:none; border:none; box-shadow:none;" >
+                    <section data-state="slide11-is-visible" data-background="black">
+                        <div class="img-magnifier-container">
+                            <img id="slide11" src="figures_flow/slide11.jpg" width="100%" alt="11" style="background:none; border:none; box-shadow:none; float:left;">
+                        </div>
+                    </section>
+                    <section data-background="black">
+                        <img src="figures/rio-bergantes-close-up.png" width="100%" style="background:none; border:none; box-shadow:none;">
                     </section>
                     <section>
                         <img width="60%" src='images/Bergantes-river-19102017.jpg' style="background:none; border:none; box-shadow:none;" class="rotate90">
@@ -443,6 +482,24 @@
                     { src: 'reveal.js/plugin/math/math.js', async: true }
 				]
 			});
+        </script>
+        
+        <!-- magnify -->
+        
+        <script>
+            Reveal.addEventListener('river_eel-is-visible', function() {
+                /* Initiate Magnify Function
+                with the id of the image, and the strength of the magnifier glass:*/
+                magnify("river_eel", 8);
+            });
+        </script>
+        
+        <script>
+            Reveal.addEventListener('slide11-is-visible', function() {
+                /* Initiate Magnify Function
+                with the id of the image, and the strength of the magnifier glass:*/
+                magnify("slide11", 8);
+            });
         </script>
         
         <!-- plotly plots -->
@@ -517,6 +574,92 @@
                     };
 
                     Plotly.newPlot('flexure', data, layout).then(Reveal.layout);
+                };
+            });
+        </script>
+        
+        <!-- plot of stream power response to precipitation rate change -->
+        
+        <script>
+            Reveal.addEventListener('transport-response-is-visible', function() {
+                Plotly.d3.csv("data/trns0.75.csv", function(error1, data1) {
+                    Plotly.d3.csv("data/trns0.50.csv", function(error2, data2) {
+                        Plotly.d3.csv("data/trns0.25.csv", function(error3, data3) { 
+                            Plotly.d3.csv("data/trns2.00.csv", function(error4, data4) {
+                                var x1 = [], y1 = [], x2 = [], y2 = [], x3 = [], y3 = [], x4 = [], y4 = [];
+
+                                for (var i=0; i<data1.length; i++) {
+                                    row = data1[i];
+                                    x1.push( row['time'] );
+                                    y1.push( row['flux'] );
+                                }
+                                for (var i=0; i<data2.length; i++) {
+                                    row = data2[i];
+                                    x2.push( row['time'] );
+                                    y2.push( row['flux'] );
+                                }
+                                for (var i=0; i<data3.length; i++) {
+                                    row = data3[i];
+                                    x3.push( row['time'] );
+                                    y3.push( row['flux'] );
+                                }
+                                for (var i=0; i<data4.length; i++) {
+                                    row = data4[i];
+                                    x4.push( row['time'] );
+                                    y4.push( row['flux'] );
+                                }
+
+                                y1 = math.multiply(0.000001,y1)
+                                y2 = math.multiply(0.000001,y2)
+                                y3 = math.multiply(0.000001,y3)
+                                y4 = math.multiply(0.000001,y4)
+
+                                console.log('X1',x1, 'Y1',y1, 'X2',x2, 'Y2', y2);
+                                makePlotly(x1, y1, x2, y2, x3, y3, x4, y4);
+                            });
+                        });
+                    });
+                });
+
+                function makePlotly(x1, y1, x2, y2, x3, y3, x4, y4){
+                    var plotDiv = document.getElementById("plot");
+                    var trace1 = {
+                        x: x1,
+                        y: y1,
+                        mode: 'lines',
+                        marker: {color: 'rgb(166,206,227)'},
+                        name: '0.25x'
+                    };
+                    var trace2 = {
+                        x: x2,
+                        y: y2,
+                        mode: 'lines',
+                        marker: {color: 'rgb(31,120,180)'},
+                        name: '0.5x'
+                    };
+                    var trace3 = {
+                        x: x3,
+                        y: y3,
+                        mode: 'lines',
+                        marker: {color: 'rgb(178,223,138)'},
+                        name: '0.75x'
+                    };
+                    var trace4 = {
+                        x: x4,
+                        y: y4,
+                        mode: 'lines',
+                        marker: {color: 'rgb(51,160,44)'},
+                        name: '2x'
+                    };
+                    var data = [trace1, trace2, trace3, trace4];
+                    var layout = {
+                        showlegend: true,
+                        title: {text:'Transport limited'},
+                        xaxis: {title: {text: 'Time (Myr)'}},
+                        yaxis: {title: {text: 'Sediment flux (m^2/yr)'}}
+                    };
+
+                    Plotly.newPlot('transport-response', data, layout).then(Reveal.layout);
                 };
             });
         </script>
@@ -659,28 +802,32 @@
                     var trace1 = {
                         x: x1,
                         y: y1,
-                        mode: 'lines',
+                        mode: 'lines+markers',
+                        type: 'scatter',
                         marker: {color: 'rgb(166,206,227)'},
                         name: '50 % recovery transport limited'
                     };
                     var trace2 = {
                         x: x1,
                         y: y2,
-                        mode: 'lines',
+                        mode: 'lines+markers',
+                        type: 'scatter',
                         marker: {color: 'rgb(31,120,180)'},
                         name: '90 % recovery transport limited'
                     };
                     var trace3 = {
                         x: x1,
                         y: y3,
-                        mode: 'lines',
+                        mode: 'lines+markers',
+                        type: 'scatter',
                         marker: {color: 'rgb(178,223,138)'},
                         name: '50 % recovery detachment limited'
                     };
                     var trace4 = {
                         x: x1,
                         y: y4,
-                        mode: 'lines',
+                        mode: 'lines+markers',
+                        type: 'scatter',
                         marker: {color: 'rgb(51,160,44)'},
                         name: '90 % recovery detachment limited'
                     };
