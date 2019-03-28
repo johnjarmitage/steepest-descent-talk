@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>The importance of ice sheet growth and retreat on magmatism and mantle CO<sup>2</sup> flux</title>
+		<title>The steepest descent is just wrong!</title>
 
 		<link rel="stylesheet" href="reveal.js/css/reveal.css">
 		<link rel="stylesheet" href="reveal.js/css/theme/black.css">
@@ -82,16 +82,16 @@
                 <section>
                     <section>
                         <h3> Numerical resolution </h3>
-                        <p> When itteratively solving a PDE we need to pay attention to the temporal and spatial discretisation. </p>
-                        <p> For example when modelling plate flexure we need to have a sufficiently high resolution to get an accurate solution. </p>
+                        <p> When iteratively solving a PDE we need to pay attention to the temporal and spatial discretization. </p>
+                        <p> For example when modelling plate flexure we need to have a sufficiently high-resolution to get an accurate solution. </p>
                     </section>
                     <section data-state="flexure-is-visible" data-background="white">
                         <div id="flexure"></div>
                     </section>
                     <section>
                         <h3> Numerical resolution </h3>
-                        <p> When itteratively solving a PDE we need to pay attention to the temporal and spatial discretisation. </p>
-                        <p> What about for landsacpe evolution? </p>
+                        <p> When iteratively solving a PDE we need to pay attention to the temporal and spatial discretization. </p>
+                        <p> What about for landscape evolution? </p>
                     </section>
                 </section>
         
@@ -196,7 +196,7 @@
                 
                 <section>
                     <section>
-                        <h3> Routing water down the steepest slope: What does the steady state landsacpe look like?</h3>
+                        <h3> Routing water down the steepest slope: What does the steady state landscape look like?</h3>
                     </section>
                     <section>
                         <p> Take the linear form of the two models: $\gamma = 1$ and $n = 1$ </p>
@@ -282,7 +282,7 @@
                             landscapes </h3>
                         <lu style="text-align: left">
                             <li> For a water flux exponent of $\delta = 1.5$ or $m=0.5$ the slope area relationship is similar. </li>
-                            <li> There are differences, noteably higher elevation for the detachment limited model reflected in larger $k_{s}$.</li>
+                            <li> There are differences, notably higher elevation for the detachment limited model reflected in larger $k_{s}$.</li>
                             <li> Overall however it is difficult to distinguish between one model or the other.</li>
                         </lu>
                     </section>
@@ -342,7 +342,7 @@
                         <small> 10 m, 100 m, 1 km? Are rivers at a sub-grid scale? </small>
                     </section>
                     <section data-state="river_eel-is-visible">
-                        <small> Dietrich, G. (2014): Eel River Critical Zone Observatory July 2014 Lidar Survey. National Center for Airborne Laser Mapping (NCALM), distributed by OpenTopography </small>
+                        <small> Dietrich, G. (2014): Eel River Critical Zone Observatory July 2014 Lidar Survey. National Center for Airborne Laser Mapping (NCALM), distributed by Open Topography </small>
                         <div class="img-magnifier-container">
                             <img id="river_eel" src="images/viz.be.hs.white.png" width="100%" alt="R.Eel" style="background:none; border:none; box-shadow:none; float:left;">
                         </div>
@@ -396,9 +396,57 @@
                         <img width="100%" src='figures_flow/slide09b.png' style="background:none; border:none; box-shadow:none;" >
                     </section>
                     <section>
-                        <h3> Node-to-node distrbuted is best</h3>
+                        <h3> Node-to-node distributed is best</h3>
                         <p> This is because it allows for the greatest range of flow paths</p>
                         <p> Is it because it approximates for sub-grid processes?</p>
+                    </section>
+                </section>
+                
+                <!-- fixed topology? -->
+                
+                <section>
+                    <section data-background="images/kizilsu.jpg">
+                        <div style="background-color: rgba(117,112,179, 0.4);">
+                            <h3> Are landscapes steady? </h3>
+                        </div>
+                    </section>
+                    <section>
+                        <p> Hasbargen and Paola, Geology, 2000:</p>
+                        <img width="900" src="images/hasbargen&paola-geology-2000.png" style="background:none; border:none; box-shadow:none;">
+                    </section>
+                    <section>
+                        <p> Hasbargen and Paola, Geology, 2000:</p>
+                        <img width="500" src="videos/r1_still_crop_seq.gif" style="background:none; border:none; box-shadow:none;">
+                    </section>
+                    <section>
+                        <p style="postion: absolute"> Hwang and Parker, Geophysical Research Letters, in review:</p>
+                        <div>
+                            <video data-autoplay src="videos/dynamic_topography.mp4"></video>
+                        </div>
+                    </section>
+                    <section>
+                        <p> Pelletier, Geophysical Research Letters, 2004:</p>
+                        <img height="650" src="images/pelletier-jgr-2004-1.png" style="background:none; border:none; box-shadow:none;">
+                    </section>
+                    <section>
+                        <p> Pelletier, Geophysical Research Letters, 2004:</p>
+                        <img width="650" src="images/pelletier-jgr-2004-2.png" style="background:none; border:none; box-shadow:none;">
+                    </section>
+                    <section>
+                        <p> Perron et al., Journal of Geophysical Research, 2008:</p>
+                        <small style="text-align: left">"Pelletier [2004] has proposed that ‘‘static’’ equilibrium solutions to drainage area-dependent landscape evolution models, in which $\nabla z/\nabla t = 0$ for all $(x, y)$, are an artifact of steepest descent flow routing, whereas numerical methods based on multiple flow directions produce persistently migrating drainage networks like those observed in some physical experiments [Hasbargen and Paola, 2000]. In contrast, we find that a flow routing method in which flow directions are not restricted to discrete increments can generate deterministic numerical solutions with stable drainage divides (see section 5.1), a result also obtained by Moglen and Bras [1995]."</small>
+                    </section>
+                    <section>
+                        <p> Node-to-node</p>
+                        <img width="100%" src='figures_flow/slide08b.png' style="background:none; border:none; box-shadow:none;" >
+                    </section>
+                    <section>
+                        <p> Node-to-node</p>
+                        <img width="100%" src='figures_flow/slide09a.png' style="background:none; border:none; box-shadow:none;" >
+                    </section>
+                    <section>
+                        <p> Unsteady steady-state </p>
+                        <img height="650" src='figures/lem-diff.png' style="background:none; border:none; box-shadow:none;" >
                     </section>
                 </section>
                 
@@ -407,7 +455,7 @@
                 <section>
                     <section data-background="images/bergantes-top.jpg" >
                         <div style="background-color: rgba(117,112,179, 0.4);">
-                            <h3> Rio Bergantes </h3>
+                            <h3> Riu Bergantes </h3>
                         </div>
                     </section>
                     <section>
@@ -423,6 +471,10 @@
                     <section data-background="black">
                         <img src="figures/rio-bergantes-close-up.png" width="100%" style="background:none; border:none; box-shadow:none;">
                     </section>
+                    <section data-background="white">
+                        <p> Whitfield et al., Geomorphology, 2013:</p>
+                        <img height="650" src="figures/whitfield-etal-2013.png" style="background:none; border:none; box-shadow:none;">
+                    </section>
                     <section>
                         <img width="60%" src='images/Bergantes-river-19102017.jpg' style="background:none; border:none; box-shadow:none;" class="rotate90">
                     </section>
@@ -436,8 +488,8 @@
                 <section>
                     <h3> Take home messages: </h3>
                     <lu style="text-align: left">
-                        <li> Transport and detachment limited models respond over a similar timescale to precipitaiton rate change. </li>
-                        <li> Steepest route of descent makes for resolution dependent landsacpes. </li>
+                        <li> Transport and detachment limited models respond over a similar timescale to precipitation rate change. </li>
+                        <li> Steepest route of descent makes for resolution dependent landscapes. </li>
                         <li> We need to somehow account for sub-gridscale processes. </li>
                     </lu>
                 </section>
@@ -445,9 +497,11 @@
                     <h3> Take home questions: </h3>
                     <lu style="text-align: left">
                         <li> Is it really reasonable to assume no deposition in a LEM?</li>
-                        <li> Can we continue to use steeptest route of descent? </li>
+                        <li> Can we continue to use steepest route of descent? </li>
                         <li> How can we benchmark the model?</li>
                     </lu>
+                </section>
+                <section data-background='images/erongo.jpg' >    
                 </section>
                 
                 
@@ -467,7 +521,7 @@
                 height: "100%",
                 
                 // to stop plots being half way down the slide
-                // center: false, 
+                //center: false, 
                 
                 math: {
                     mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
